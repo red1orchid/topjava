@@ -25,4 +25,10 @@ public class UserMealWithExceed {
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+
+    @Override
+    public String toString() {
+        String res = "[" + dateTime + ", " + description + ", " + calories + ", " + exceed + "]";
+        return res;
+    }
 }
