@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.repository.mock;
+package ru.javawebinar.topjava.repository.memory;
 
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;

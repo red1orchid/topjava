@@ -3,7 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.repository.mock.InMemoryUserMealRepositoryImpl;
+import ru.javawebinar.topjava.repository.memory.InMemoryUserMealRepositoryImpl;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
@@ -58,7 +58,8 @@ public class MealServlet extends HttpServlet {
             response.sendRedirect("meals");
         } else if (action.equals("create") || action.equals("update")) {
             final UserMeal meal = action.equals("create") ?
-                    new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
+                    //TODO: not 0
+                    new UserMeal(0, LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
                     repository.get(getId(request));
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
