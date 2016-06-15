@@ -1,18 +1,23 @@
 package ru.javawebinar.topjava.repository.memory;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * GKislin
  * 15.09.2015.
  */
+@Repository
 public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     private Map<Integer, UserMeal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
@@ -41,8 +46,12 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     }
 
     @Override
-    public Collection<UserMeal> getAll() {
-        return repository.values();
+    public Collection<UserMeal> getAll(int userId) {
+        return repository.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(m -> m.getUserId() == userId)
+                .sorted(Collections.reverseOrder(Comparator.comparing(UserMeal::getDateTime)))
+                .collect(Collectors.toList());
     }
 }
 

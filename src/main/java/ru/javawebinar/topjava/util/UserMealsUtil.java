@@ -18,18 +18,21 @@ import java.util.stream.Collectors;
  */
 public class UserMealsUtil {
     public static final List<User> USERS_LIST = Arrays.asList(
-            new User(null, "user1", "user1@mailbox.ru", "1111", Role.ROLE_USER),
-            new User(null, "user2", "user2@mailbox.ru", "2222", Role.ROLE_USER),
-            new User(null, "admin", "admin@mailbox.ru", "qwerty", Role.ROLE_ADMIN)
+            new User(1, "user1", "user1@mailbox.ru", "1111", Role.ROLE_USER),
+            new User(2, "user2", "user2@mailbox.ru", "2222", Role.ROLE_USER),
+            new User(3, "admin", "admin@mailbox.ru", "qwerty", Role.ROLE_ADMIN)
     );
 
     public static final List<UserMeal> MEAL_LIST = Arrays.asList(
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+            new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510),
+            new UserMeal(3, LocalDateTime.of(2015, Month.MAY, 29, 14, 0), "Обед", 1000),
+            new UserMeal(3, LocalDateTime.of(2015, Month.MAY, 29, 10, 0), "Завтрак", 500),
+            new UserMeal(3, LocalDateTime.of(2015, Month.MAY, 31, 9, 0), "Завтрак", 1000)
     );
 
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
