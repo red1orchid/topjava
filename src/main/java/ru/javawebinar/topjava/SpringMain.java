@@ -37,10 +37,10 @@ public class SpringMain {
             System.out.println(adminUserController.getAll());
 
             System.out.println("=====");
-            System.out.println(userMealRestController.getAll());
-            System.out.println(userMealRestController.create(new UserMeal(1, LocalDateTime.of(2016, Month.MAY, 30, 10, 0), "Завтрак", 500)));
-            System.out.println(userMealRestController.getAll());
-            System.out.println(userMealRestController.getFiltred(LocalDate.of(2016, 1, 1), null, LocalTime.of(8, 0), LocalTime.of(10, 0)));
+            System.out.println(userMealRestController.getAllWithExceed());
+            System.out.println(userMealRestController.save(new UserMeal(1, LocalDateTime.of(2016, Month.MAY, 30, 10, 0), "Завтрак", 500)));
+            System.out.println(userMealRestController.getAllWithExceed());
+            System.out.println(userMealRestController.getFilteredWithExceed(LocalDate.of(2016, 1, 1), null, LocalTime.of(8, 0), LocalTime.of(10, 0)));
         }
     }
 }

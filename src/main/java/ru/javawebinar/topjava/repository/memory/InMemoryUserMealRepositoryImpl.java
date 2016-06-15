@@ -3,8 +3,10 @@ package ru.javawebinar.topjava.repository.memory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,6 +52,15 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
         return repository.entrySet().stream()
                 .map(Map.Entry::getValue)
                 .filter(m -> m.getUserId() == userId)
+                .sorted(Collections.reverseOrder(Comparator.comparing(UserMeal::getDateTime)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<UserMeal> getFiltered(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(m -> m.getUserId() == userId && TimeUtil.isBetween(m.getDateTime().toLocalDate(), startDate, endDate))
                 .sorted(Collections.reverseOrder(Comparator.comparing(UserMeal::getDateTime)))
                 .collect(Collectors.toList());
     }

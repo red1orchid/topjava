@@ -2,6 +2,9 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.LoggedUser;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.memory.InMemoryUserMealRepositoryImpl;
@@ -9,6 +12,7 @@ import ru.javawebinar.topjava.repository.UserMealRepository;
 import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.service.UserMealServiceImpl;
 import ru.javawebinar.topjava.util.UserMealsUtil;
+import ru.javawebinar.topjava.web.meal.UserMealRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,47 +30,50 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
-   // private UserMealRepository repository;
-   private UserMealService service;
+    private UserMealRestController controller;
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-     //   repository = new InMemoryUserMealRepositoryImpl();
-        service = new UserMealServiceImpl();
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        controller = appCtx.getBean(UserMealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        appCtx.close();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-        UserMeal userMeal = new UserMeal(id.isEmpty() ? null : Integer.valueOf(id),
+        UserMeal userMeal = new UserMeal(null, id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.valueOf(request.getParameter("calories")));
         LOG.info(userMeal.isNew() ? "Create {}" : "Update {}", userMeal);
-        service.save(userMeal, LoggedUser.id());
+        controller.save(userMeal);
         response.sendRedirect("meals");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-      //  LoggedUser user = (LoggedUser) request.getSession().getAttribute("user");
+        //  LoggedUser user = (LoggedUser) request.getSession().getAttribute("user");
 
         if (action == null) {
             LOG.info("getAll");
-            request.setAttribute("mealList",
-                    UserMealsUtil.getWithExceeded(service.getAll(LoggedUser.id()), UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
+            request.setAttribute("mealList", controller.getAllWithExceed());
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
         } else if (action.equals("delete")) {
             int id = getId(request);
             LOG.info("Delete {}", id);
-            service.delete(id, LoggedUser.id());
+            controller.delete(id);
             response.sendRedirect("meals");
         } else if (action.equals("create") || action.equals("update")) {
             final UserMeal meal = action.equals("create") ?
-                    //TODO: not 0
-                    new UserMeal(0, LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
-                    service.get(getId(request), LoggedUser.id());
+                    new UserMeal(null, LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
+                    controller.get(getId(request));
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
         }
